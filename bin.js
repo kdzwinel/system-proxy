@@ -4,7 +4,7 @@ var argv = require('optimist').argv;
 var proxy = require('./index');
 
 if (argv.h) {
-  var p = h.split(':');
+  var p = argv.h.split(':');
   proxy.setProxyOn(p[0], p[1])
     .then(function() {
       console.log('Proxy on ok!');
