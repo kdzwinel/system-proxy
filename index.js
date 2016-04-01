@@ -8,9 +8,9 @@ function run(cmd) {
         sudo.exec(cmd, {}, (error, data) => {
             if (error) {
                 reject(error);
+            } else {
+                resolve(data && data.toString());
             }
-
-            resolve(data.toString());
         });
     });
 }
@@ -79,7 +79,8 @@ exports.setProxyOn = function (host, port) {
                         .replace('_port', port);
                     return run(cmd);
                 }, null).then(resolve).catch(reject);
-            });
+            })
+            .catch(reject);
     });
 };
 
