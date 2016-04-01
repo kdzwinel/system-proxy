@@ -1,23 +1,19 @@
 #!/usr/bin/env node
 
-var argv = require('optimist').argv;
-var proxy = require('./index');
+//node bin.js -h localhost:8008
+//node bin.js -d
+
+const argv = require('optimist').argv;
+const proxy = require('./index');
 
 if (argv.h) {
-  var p = argv.h.split(':');
-  proxy.setProxyOn(p[0], p[1])
-    .then(function() {
-      console.log('Proxy on ok!');
-    })
-    .catch(function() {
-      console.log('fail');
-    });
+    const p = argv.h.split(':');
+
+    proxy.setProxyOn(p[0], p[1])
+        .then(() => console.log('Proxy on ok!'))
+        .catch(() => console.log('fail'));
 } else if (argv.d) {
-  proxy.setProxyOff()
-    .then(function() {
-      console.log('Proxy off ok!');
-    })
-    .catch(function() {
-      console.log('fail');
-    });
-};
+    proxy.setProxyOff()
+        .then(() => console.log('Proxy off ok!'))
+        .catch(() => console.log('fail'));
+}
