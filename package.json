@@ -13,7 +13,8 @@
     "system"
   ],
   "dependencies": {
-    "bluebird": "~2.3.11",
+    "bluebird": "^3.3.4",
+    "electron-sudo": "^3.0.3",
     "optimist": "~0.6.1"
   },
   "optionalDependencies": {
@@ -25,8 +26,10 @@
   "bin": {
     "system-proxy": "./bin.js"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/helloyou2012/system-proxy/raw/master/LICENSE-MIT"
-  }]
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/helloyou2012/system-proxy/raw/master/LICENSE-MIT"
+    }
+  ]
 }
