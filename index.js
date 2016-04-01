@@ -1,10 +1,10 @@
 'use strict';
 
-const Promise = require('bluebird');
+const BBPromise = require('bluebird');
 const sudo = require('electron-sudo');
 
 function run(cmd) {
-    return new Promise((resolve, reject) => {
+    return new BBPromise((resolve, reject) => {
         sudo.exec(cmd, {}, (error, data) => {
             if (error) {
                 reject(error);
@@ -15,8 +15,8 @@ function run(cmd) {
     });
 }
 
-const _getDevice = function () {
-    return new Promise((resolve, reject) => {
+const _getDevice = function() {
+    return new BBPromise((resolve, reject) => {
         run('ifconfig')
             .then((output) => {
                 const re = /^([^\t:]+):(?:[^\n]|\n\t)*status: active/mg;
@@ -26,14 +26,19 @@ const _getDevice = function () {
                 while ((md = re.exec(output)) !== null) {
                     devices.push(md[1]);
                 }
-                devices.length ? resolve(devices) : reject();
+
+                if (devices.length) {
+                    resolve(devices);
+                } else {
+                    reject();
+                }
             })
             .catch(reject);
     });
 };
 
-const _getCommands = function () {
-    return new Promise((resolve, reject) => {
+const _getCommands = function() {
+    return new BBPromise((resolve, reject) => {
         if (process.platform !== 'win32') {
             _getDevice()
                 .then((devices) => {
@@ -48,14 +53,19 @@ const _getCommands = function () {
                             ];
 
                             for (let i = 0; i < devices.length; i++) {
-                                const re = new RegExp("Hardware Port: (.+?)\\nDevice: " + devices[i], 'm');
-                                let md;
+                                const re = new RegExp('Hardware Port: (.+?)\\nDevice: ' + devices[i], 'm');
+                                const md = re.exec(output);
 
-                                if (md = re.exec(output)) {
+                                if (md) {
                                     setups.map(item => cmds.push(item.replace('_service', md[1])));
                                 }
                             }
-                            cmds.length ? resolve(cmds) : reject();
+
+                            if (cmds.length) {
+                                resolve(cmds);
+                            } else {
+                                reject();
+                            }
                         })
                         .catch(reject);
                 }).catch(reject);
@@ -70,11 +80,11 @@ const _getCommands = function () {
     });
 };
 
-exports.setProxyOn = function (host, port) {
-    return new Promise((resolve, reject) => {
+exports.setProxyOn = function(host, port) {
+    return new BBPromise((resolve, reject) => {
         _getCommands()
             .then((cmds) => {
-                Promise.reduce(cmds, (_, cmd) => {
+                BBPromise.reduce(cmds, (_, cmd) => {
                     cmd = cmd.replace('_host', host)
                         .replace('_port', port);
                     return run(cmd);
@@ -84,7 +94,7 @@ exports.setProxyOn = function (host, port) {
     });
 };
 
-exports.setProxyOff = function () {
+exports.setProxyOff = function() {
     const cmds = [];
 
     if (process.platform !== 'win32') {
@@ -96,5 +106,5 @@ exports.setProxyOff = function () {
         cmds.push('netsh winhttp reset proxy');
     }
 
-    return Promise.reduce(cmds, (_, cmd) => run(cmd), null);
+    return BBPromise.reduce(cmds, (_, cmd) => run(cmd), null);
 };

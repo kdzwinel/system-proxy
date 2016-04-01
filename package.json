@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/helloyou2012/system-proxy.git"
   },
+  "scripts": {
+    "test": "jshint *.js && jscs *.js"
+  },
   "keywords": [
     "proxy",
     "system"
