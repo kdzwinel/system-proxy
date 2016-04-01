@@ -1,13 +1,15 @@
-var Promise = require('bluebird');
-
-var exec = process.platform !== 'win32' ? require('child_process').exec : require('node-windows').elevate;
+const Promise = require('bluebird');
+const sudo = require('electron-sudo');
 
 function run(cmd) {
   return new Promise(function(resolve, reject) {
-    exec(cmd, function(err, stdout, stderr) {
-      if (err) reject(err);
-      else resolve(stdout.toString());
-    });
+      sudo.exec(cmd, {}, function(error, data) {
+          if(error) {
+              reject(error);
+          }
+
+          resolve(data.toString());
+      });
   });
 }
 
@@ -36,10 +38,10 @@ var _getCommands = function() {
             .then(function(output) {
               var cmds = [];
               var setups = [
-                'sudo networksetup -setwebproxy "_service" _host _port',
-                'sudo networksetup -setsecurewebproxy "_service" _host _port',
-                'sudo networksetup -setwebproxystate "_service" on',
-                'sudo networksetup -setsecurewebproxystate "_service" on'
+                'networksetup -setwebproxy "_service" _host _port',
+                'networksetup -setsecurewebproxy "_service" _host _port',
+                'networksetup -setwebproxystate "_service" on',
+                'networksetup -setsecurewebproxystate "_service" on'
               ];
               for (var i = 0; i < devices.length; i++) {
                 var md, re = new RegExp("Hardware Port: (.+?)\\nDevice: " + devices[i], 'm');
@@ -80,8 +82,8 @@ exports.setProxyOn = function(host, port) {
 exports.setProxyOff = function() {
   var cmds = [];
   if (process.platform !== 'win32') {
-    cmds.push('sudo networksetup -setwebproxystate WI-FI off');
-    cmds.push('sudo networksetup -setsecurewebproxystate WI-FI off');
+    cmds.push('networksetup -setwebproxystate WI-FI off');
+    cmds.push('networksetup -setsecurewebproxystate WI-FI off');
   } else {
     cmds.push('reg delete "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /f');
     cmds.push('reg delete "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyServer /f');
