@@ -1,12 +1,12 @@
 {
   "name": "system-proxy",
   "version": "2.0.0",
-  "author": "学霸 <helloyou2012@yeah.net>",
+  "author": "学霸 <helloyou2012@yeah.net>, kdzwinel <kdzwinel@gmail.com>",
   "description": "Set system proxy for mac and windows platform",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/helloyou2012/system-proxy.git"
+    "url": "https://github.com/kdzwinel/system-proxy.git"
   },
   "scripts": {
     "test": "jshint *.js && jscs *.js"
@@ -16,15 +16,11 @@
     "system"
   ],
   "dependencies": {
-    "bluebird": "^3.3.4",
     "electron-sudo": "^3.0.3",
     "optimist": "~0.6.1"
   },
-  "optionalDependencies": {
-    "node-windows": "~0.1.7"
-  },
   "bugs": {
-    "url": "https://github.com/helloyou2012/system-proxy/issues"
+    "url": "https://github.com/kdzwinel/system-proxy/issues"
   },
   "bin": {
     "system-proxy": "./bin.js"
@@ -32,7 +28,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/helloyou2012/system-proxy/raw/master/LICENSE-MIT"
+      "url": "https://github.com/kdzwinel/system-proxy/raw/master/LICENSE-MIT"
     }
   ]
 }

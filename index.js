@@ -1,10 +1,9 @@
 'use strict';
 
-const BBPromise = require('bluebird');
 const sudo = require('electron-sudo');
 
 function run(cmd) {
-    return new BBPromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         sudo.exec(cmd, {}, (error, data) => {
             if (error) {
                 reject(error);
@@ -16,7 +15,7 @@ function run(cmd) {
 }
 
 const _getDevice = function() {
-    return new BBPromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         run('ifconfig')
             .then((output) => {
                 const re = /^([^\t:]+):(?:[^\n]|\n\t)*status: active/mg;
@@ -38,7 +37,7 @@ const _getDevice = function() {
 };
 
 const _getCommands = function() {
-    return new BBPromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         if (process.platform !== 'win32') {
             _getDevice()
                 .then((devices) => {
@@ -81,15 +80,17 @@ const _getCommands = function() {
 };
 
 exports.setProxyOn = function(host, port) {
-    return new BBPromise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         _getCommands()
             .then((cmds) => {
-                BBPromise.reduce(cmds, (_, cmd) => {
+                return cmds.reduce((_, cmd) => {
                     cmd = cmd.replace('_host', host)
                         .replace('_port', port);
-                    return run(cmd);
-                }, null).then(resolve).catch(reject);
+
+                    return _.then(() => run(cmd));
+                }, Promise.resolve());
             })
+            .then(resolve)
             .catch(reject);
     });
 };
@@ -106,5 +107,7 @@ exports.setProxyOff = function() {
         cmds.push('netsh winhttp reset proxy');
     }
 
-    return BBPromise.reduce(cmds, (_, cmd) => run(cmd), null);
+    return cmds.reduce((_, cmd) => {
+        return _.then(() => run(cmd));
+    }, Promise.resolve());
 };
