@@ -1,37 +1,35 @@
-# system-proxy: Set system proxy for mac & windows platform
+# system-proxy
 
-# Installing:
+Set system proxy for mac & windows platform.
+
+**This version is adjusted for electron apps - it will use GUI prompt to ask user for permissions.**
+
+## Installation
 
      npm install system-proxy
 
-## Usage:
+## Usage
+
+### API
 
 ```javascript
 var proxy = require('system-proxy');
 
-proxy.setProxyOn(p[0], p[1])
-  .then(function() {
-    console.log('Proxy on ok!');
-  })
-  .catch(function() {
-    console.log('fail');
-  });
+proxy.setProxyOn(host, port)
+    .then(() => console.log('Proxy is ON'))
+    .catch(() => console.log('Failure'));
 
 proxy.setProxyOff()
-  .then(function() {
-    console.log('Proxy off ok!');
-  })
-  .catch(function() {
-    console.log('fail');
-  });
+    .then(() => console.log('Proxy is OFF'))
+    .catch(() => console.log('Failure'));
 ```
 
-### terminal
+### Util
 
 ```shell
-# disable web-proxy
-system-proxy -d
-
 # set web-proxy
 system-proxy -h localhost:8080
+
+# disable web-proxy
+system-proxy -d
 ```
