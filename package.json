@@ -16,7 +16,7 @@
     "system"
   ],
   "dependencies": {
-    "electron-sudo": "^3.0.3",
+    "electron-sudo": "^3.0.4",
     "optimist": "~0.6.1"
   },
   "bugs": {
